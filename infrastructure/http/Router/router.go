@@ -11,7 +11,9 @@ func RouterInit(userHandler *handler.UserHandler) {
 	r = gin.Default()
 
 	r.POST("/signup", userHandler.CreateUserHandler)
-	r.GET("/List")
+	r.POST("/login", userHandler.LoginHandler)
+	r.POST("/logout", userHandler.LogoutHandler)
+	r.POST("/refresh-token", userHandler.RefreshTokensHandler)
 }
 
 func Init(addr string) error {
