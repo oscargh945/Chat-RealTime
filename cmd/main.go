@@ -4,10 +4,12 @@ import (
 	"context"
 	"github.com/joho/godotenv"
 	"github.com/oscargh945/go-Chat/domain/service"
-	"github.com/oscargh945/go-Chat/infrastructure/http/Router"
-	"github.com/oscargh945/go-Chat/infrastructure/http/handler"
+	"github.com/oscargh945/go-Chat/infrastructure/interfaces/http/Router"
+	"github.com/oscargh945/go-Chat/infrastructure/interfaces/http/handler"
+	"github.com/oscargh945/go-Chat/infrastructure/interfaces/http/webSocket"
 	"github.com/oscargh945/go-Chat/infrastructure/postgresConfig"
 	"github.com/oscargh945/go-Chat/infrastructure/repositories"
+	"github.com/oscargh945/go-Chat/infrastructure/webSocket/models"
 	"log"
 )
 
@@ -25,6 +27,9 @@ func main() {
 	userService := service.NewUserService(userRepository)
 	userHandler := handler.NewUserHandler(*userService)
 
-	Router.RouterInit(userHandler)
+	hub := models.NewHub()
+	wsHandler := webSocket.NewWebSocketHandler(hub)
+
+	Router.RouterInit(userHandler, wsHandler)
 	Router.Init("localhost:8080")
 }
